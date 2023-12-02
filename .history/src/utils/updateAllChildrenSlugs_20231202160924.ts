@@ -43,16 +43,18 @@ export default async function updateAllChildrenPaths(
                 return { ...path, path: updatedPath };
             });
 
-            const updatedPathObject = Object.fromEntries(
-                pathArray.map((p) => [p.lang, p.path])
-            );
-            await client.items.update(record.id, updatedPathObject);
+            const updatedPath = Object.fromEntries([]);
+            await client.items.update(record.id, {
+                [pathFieldKey]: updatedPath,
+            });
 
             updateAllChildrenPaths(
                 apiToken,
                 modelID,
                 record.id,
-                updatedPathObject
+                updatedSlug +
+                    "/" +
+                    destructuredOldPath[destructuredOldPath.length - 1]
             );
         });
     }

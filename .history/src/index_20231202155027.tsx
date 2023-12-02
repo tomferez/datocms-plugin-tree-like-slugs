@@ -7,7 +7,7 @@ import { render } from "./utils/render";
 import ConfigScreen from "./entrypoints/ConfigScreen";
 import "datocms-react-ui/styles.css";
 import SlugExtension from "./entrypoints/SlugExtension";
-import updateAllChildrenPaths, { Slug } from "./utils/updateAllChildrenSlugs";
+import updateAllChildrenPaths from "./utils/updateAllChildrenSlugs";
 
 connect({
     renderConfigScreen(ctx) {
@@ -67,10 +67,11 @@ connect({
         updateAllChildrenPaths(
             ctx.currentUserAccessToken as string,
             createOrUpdateItemPayload.data.relationships!.item_type!.data.id,
-            (createOrUpdateItemPayload.data as any).id,
+            (createOrUpdateItemPayload.data as any).id, //i shouldn't have to cast this to any
+            // updatedSlugFieldKey
             createOrUpdateItemPayload.data.attributes![
                 updatedSlugFieldKey
-            ] as Slug
+            ] as string
         );
 
         return true;

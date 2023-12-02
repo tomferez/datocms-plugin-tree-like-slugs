@@ -1,4 +1,5 @@
 import { buildClient } from "@datocms/cma-client-browser";
+import path from "path";
 
 export type Slug = { [key: string]: string };
 type Path = { [key: string]: string };
@@ -43,16 +44,20 @@ export default async function updateAllChildrenPaths(
                 return { ...path, path: updatedPath };
             });
 
-            const updatedPathObject = Object.fromEntries(
+            const updatedPath = Object.fromEntries(
                 pathArray.map((p) => [p.lang, p.path])
             );
-            await client.items.update(record.id, updatedPathObject);
+            await client.items.update(record.id, {
+                [pathFieldKey]: updatedPath,
+            });
 
             updateAllChildrenPaths(
                 apiToken,
                 modelID,
                 record.id,
-                updatedPathObject
+                updatedSlug +
+                    "/" +
+                    destructuredOldPath[destructuredOldPath.length - 1]
             );
         });
     }

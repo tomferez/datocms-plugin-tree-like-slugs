@@ -1,0 +1,55 @@
+{
+  "name": "datocms-plugin-tree-like-slugs",
+  "version": "0.1.0",
+  "private": false,
+  "homepage": "https://github.com/marcelofinamorvieira/datocms-plugin-tree-like-slugs",
+  "description": "A plugin that makes it so the slugs in tree-like records are passed down to the child records",
+  "keywords": [
+    "datocms-plugin",
+    "slug",
+    "tree"
+  ],
+  "datoCmsPlugin": {
+    "title": "Tree-like slugs",
+    "coverImage": "docs/cover.png",
+    "previewImage": "docs/preview.mp4",
+    "entryPoint": "build/index.html",
+    "permissions": [
+      "currentUserAccessToken"
+    ]
+  },
+  "scripts": {
+    "start": "cross-env BROWSER='none' PUBLIC_URL='/' react-scripts start",
+    "build": "cross-env PUBLIC_URL='.' react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "prepublishOnly": "npm run build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18.2.17",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@datocms/cma-client-browser": "^3.0.8",
+    "datocms-plugin-sdk": "^1.0.0",
+    "datocms-react-ui": "^1.0.0",
+    "react-scripts": "^5.0.1"
+  }
+}
