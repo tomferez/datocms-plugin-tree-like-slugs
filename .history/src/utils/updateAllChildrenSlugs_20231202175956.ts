@@ -5,10 +5,9 @@ type Path = { [key: string]: string };
 
 const PATH_FIELD_KEY = "published_path";
 
-async function updateRecordOptimistic(
+async function updateRecordByIncrementingCounter(
     itemId: string,
-    client: Client,
-    payload: { [PATH_FIELD_KEY]: Path }
+    client: Client
 ) {
     // first we get the record we want to update
     const record = (await client.items.find(itemId)) as any;
@@ -16,15 +15,17 @@ async function updateRecordOptimistic(
         // now we increment the counter value, passing the current version
         // to enable optimistic-locking
         client.items.update(itemId, {
-            payload,
+            counter: record.counter + 1,
             meta: { current_version: record.meta.current_version },
         });
+        console.log("Done!");
     } catch (e) {
         // if we get a STALE_ITEM_VERSION error, this means that the
         // the record changed in-between the find and update operations, so we have
         // to fetch the latest version of the record and try again
         if (e instanceof ApiError && e.findError("STALE_ITEM_VERSION")) {
-            return updateRecordOptimistic(itemId, client, payload);
+            console.log("Stale version, retrying...");
+            return updateRecordByIncrementingCounter();
         }
         throw e;
     }
@@ -80,7 +81,7 @@ export default async function updateAllChildrenPaths(
         updatedSlug
     );
 
-    await updateRecordOptimistic(recordID, client, {
+    await client.items.update(recordID, {
         [PATH_FIELD_KEY]: updatedPathObject,
     });
 
