@@ -16,7 +16,7 @@ async function updateRecordOptimistic(
         // now we increment the counter value, passing the current version
         // to enable optimistic-locking
         client.items.update(itemId, {
-            [PATH_FIELD_KEY]: payload[PATH_FIELD_KEY],
+            payload,
             meta: { current_version: record.meta.current_version },
         });
     } catch (e) {
