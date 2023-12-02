@@ -3,8 +3,6 @@ import { buildClient } from "@datocms/cma-client-browser";
 export type Slug = { [key: string]: string };
 type Path = { [key: string]: string };
 
-const PATH_FIELD_KEY = "published_path";
-
 function preparePaths(pathObject: Path, updatedSlug: Slug) {
     const pathArray = Object.keys(pathObject).map((key) => {
         return { lang: key, path: pathObject[key] };
@@ -46,14 +44,7 @@ export default async function updateAllChildrenPaths(
 
     const currentRecord = await client.items.find(recordID);
 
-    const updatedPathObject = preparePaths(
-        currentRecord[PATH_FIELD_KEY] as Path,
-        updatedSlug
-    );
-
-    await client.items.update(recordID, {
-        [PATH_FIELD_KEY]: updatedPathObject,
-    });
+    await client.items.update(recordID, updatedPathObject);
 
     console.log("CURRENT RECORD", currentRecord);
 
@@ -70,18 +61,18 @@ export default async function updateAllChildrenPaths(
 
     console.log(" RECORDS", childrenRecords);
 
+    const pathFieldKey = "published_path";
+
     if (childrenRecords.length) {
         childrenRecords.forEach(async (record) => {
             const updatedPathObject = preparePaths(
-                record[PATH_FIELD_KEY] as Path,
+                record[pathFieldKey] as Path,
                 updatedSlug
             );
 
             console.log("UPDATED PATH OBJECT", updatedPathObject);
 
-            await client.items.update(record.id, {
-                [PATH_FIELD_KEY]: updatedPathObject,
-            });
+            await client.items.update(record.id, updatedPathObject);
 
             updateAllChildrenPaths(
                 apiToken,
