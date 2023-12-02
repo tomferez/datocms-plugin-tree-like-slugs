@@ -46,13 +46,15 @@ export default async function updateAllChildrenPaths(
             console.log("PATH ARRAY BEFORE", pathArray);
 
             pathArray.forEach((path) => {
-                const destructuredOldPath = path.path.split("/").slice(1);
+                const destructuredOldPath = path.path.split("/").sli;
                 const slug = updatedSlug[path.lang];
 
                 console.log("PATH ARRAY UPDATED SLUG", slug);
 
-                const updatedPath = "/" + slug + "/" + destructuredOldPath;
-
+                const updatedPath =
+                    slug +
+                    "/" +
+                    destructuredOldPath[destructuredOldPath.length - 1];
                 return { ...path, path: updatedPath };
             });
 

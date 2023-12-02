@@ -51,8 +51,9 @@ export default async function updateAllChildrenPaths(
 
                 console.log("PATH ARRAY UPDATED SLUG", slug);
 
-                const updatedPath = "/" + slug + "/" + destructuredOldPath;
+                const updatedPath = slug + "/" + destructuredOldPath;
 
+                console.log("PATH UPDATEDED PATH", updatedPath);
                 return { ...path, path: updatedPath };
             });
 

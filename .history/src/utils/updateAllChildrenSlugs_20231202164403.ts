@@ -5,7 +5,7 @@ type Path = { [key: string]: string };
 export default async function updateAllChildrenPaths(
     apiToken: string,
     modelID: string,
-    recordID: string,
+    parentID: string,
     updatedSlug: Slug
 ) {
     console.log("UPDATED SLUG INITIAL", updatedSlug);
@@ -14,16 +14,23 @@ export default async function updateAllChildrenPaths(
         apiToken,
     });
 
-    const currentRecord = await client.items.find(recordID);
-
-    console.log("CURRENT RECORD", currentRecord);
+    const currentRecord = await client.items.list({
+        filter: {
+            type: modelID,
+            fields: {
+                slug: {
+                    eq: parentID,
+                },
+            },
+        },
+    });
 
     const childrenRecords = await client.items.list({
         filter: {
             type: modelID,
             fields: {
                 parent: {
-                    eq: recordID,
+                    eq: parentID,
                 },
             },
         },
@@ -46,13 +53,12 @@ export default async function updateAllChildrenPaths(
             console.log("PATH ARRAY BEFORE", pathArray);
 
             pathArray.forEach((path) => {
-                const destructuredOldPath = path.path.split("/").slice(1);
+                const destructuredOldPath = path.path.split("/");
                 const slug = updatedSlug[path.lang];
-
-                console.log("PATH ARRAY UPDATED SLUG", slug);
-
-                const updatedPath = "/" + slug + "/" + destructuredOldPath;
-
+                const updatedPath =
+                    slug +
+                    "/" +
+                    destructuredOldPath[destructuredOldPath.length - 1];
                 return { ...path, path: updatedPath };
             });
 
