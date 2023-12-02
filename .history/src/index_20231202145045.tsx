@@ -19,7 +19,7 @@ connect({
                 id: "treeLikeSlugs",
                 name: "Tree-like slugs",
                 type: "addon",
-                fieldTypes: ["slug"],
+                fieldTypes: ["string"],
             },
         ];
     },
@@ -51,16 +51,16 @@ connect({
             createOrUpdateItemPayload.data.attributes as object
         );
 
-        let updatedSlugFieldKey;
+        let updatedFieldKey;
 
         (fieldUsingThisPlugin as Array<string>).forEach((field) => {
             if (updatedFields.includes(field)) {
-                updatedSlugFieldKey = field;
+                updatedFieldKey = field;
                 return;
             }
         });
 
-        if (!updatedSlugFieldKey) {
+        if (!updatedFieldKey) {
             return true;
         }
 
@@ -68,9 +68,9 @@ connect({
             ctx.currentUserAccessToken as string,
             createOrUpdateItemPayload.data.relationships!.item_type!.data.id,
             (createOrUpdateItemPayload.data as any).id, //i shouldn't have to cast this to any
-            // updatedSlugFieldKey
+            updatedFieldKey,
             createOrUpdateItemPayload.data.attributes![
-                updatedSlugFieldKey
+                updatedFieldKey
             ] as string
         );
 

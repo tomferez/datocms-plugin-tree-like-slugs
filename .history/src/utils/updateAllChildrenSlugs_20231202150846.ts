@@ -20,12 +20,12 @@ export default async function updateAllChildrenPaths(
                 },
             },
         },
-    });
-
-    const pathFieldKey = "published_path";
+        
 
     if (records.length) {
         records.forEach(async (record) => {
+          const pathFieldKey = Object.keys(record).find((key) => {});
+          
             const destructuredOldPath = (record[pathFieldKey] as string).split(
                 "/"
             );
@@ -40,7 +40,7 @@ export default async function updateAllChildrenPaths(
                 apiToken,
                 modelID,
                 record.id,
-                // slugFieldKey,
+                pathFieldKey,
                 updatedSlug +
                     "/" +
                     destructuredOldPath[destructuredOldPath.length - 1]

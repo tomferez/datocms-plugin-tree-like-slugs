@@ -68,10 +68,10 @@ connect({
             ctx.currentUserAccessToken as string,
             createOrUpdateItemPayload.data.relationships!.item_type!.data.id,
             (createOrUpdateItemPayload.data as any).id, //i shouldn't have to cast this to any
-            // updatedSlugFieldKey
-            createOrUpdateItemPayload.data.attributes![
-                updatedSlugFieldKey
-            ] as string
+            updatedSlugFieldKey
+            // createOrUpdateItemPayload.data.attributes![
+            //     updatedSlugFieldKey
+            // ] as string
         );
 
         return true;

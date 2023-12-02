@@ -4,7 +4,7 @@ export default async function updateAllChildrenPaths(
     apiToken: string,
     modelID: string,
     parentID: string,
-    // pathFieldKey: string,
+    pathFieldKey: string,
     updatedSlug: string
 ) {
     const client = buildClient({
@@ -22,8 +22,6 @@ export default async function updateAllChildrenPaths(
         },
     });
 
-    const pathFieldKey = "published_path";
-
     if (records.length) {
         records.forEach(async (record) => {
             const destructuredOldPath = (record[pathFieldKey] as string).split(
@@ -40,7 +38,7 @@ export default async function updateAllChildrenPaths(
                 apiToken,
                 modelID,
                 record.id,
-                // slugFieldKey,
+                pathFieldKey,
                 updatedSlug +
                     "/" +
                     destructuredOldPath[destructuredOldPath.length - 1]

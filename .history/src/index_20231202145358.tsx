@@ -19,7 +19,7 @@ connect({
                 id: "treeLikeSlugs",
                 name: "Tree-like slugs",
                 type: "addon",
-                fieldTypes: ["slug"],
+                fieldTypes: ["string"],
             },
         ];
     },
@@ -68,7 +68,7 @@ connect({
             ctx.currentUserAccessToken as string,
             createOrUpdateItemPayload.data.relationships!.item_type!.data.id,
             (createOrUpdateItemPayload.data as any).id, //i shouldn't have to cast this to any
-            // updatedSlugFieldKey
+            updatedSlugFieldKey,
             createOrUpdateItemPayload.data.attributes![
                 updatedSlugFieldKey
             ] as string
