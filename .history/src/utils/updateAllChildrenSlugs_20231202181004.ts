@@ -9,7 +9,7 @@ async function updateRecordOptimistic(
     itemId: string,
     client: Client,
     payload: { [PATH_FIELD_KEY]: Path }
-): Promise<void> {
+): Promise<void {
     // first we get the record we want to update
     const record = (await client.items.find(itemId)) as any;
     try {
@@ -28,7 +28,7 @@ async function updateRecordOptimistic(
         }
         throw e;
     }
-}
+}: Promise<void>
 
 function preparePaths(pathObject: Path, updatedSlug: Slug) {
     const pathArray = Object.keys(pathObject).map((key) => {
