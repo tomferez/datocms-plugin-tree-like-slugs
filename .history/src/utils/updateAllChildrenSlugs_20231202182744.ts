@@ -61,8 +61,7 @@ export default async function updateAllChildrenPaths(
     apiToken: string,
     modelID: string,
     recordID: string,
-    updatedSlug: Slug,
-    initial = true
+    updatedSlug: Slug
 ) {
     console.log("UPDATED SLUG INITIAL", updatedSlug);
 
@@ -70,19 +69,18 @@ export default async function updateAllChildrenPaths(
         apiToken,
     });
 
-    if (initial) {
-        const currentRecord = await client.items.find(recordID);
+    const currentRecord = await client.items.find(recordID);
 
-        console.log("CURRENT RECORD", currentRecord);
+    console.log("CURRENT RECORD", currentRecord);
 
-        const updatedPathObject = preparePaths(
-            currentRecord[PATH_FIELD_KEY] as Path,
-            updatedSlug
-        );
-        await updateRecordOptimistic(recordID, client, {
-            [PATH_FIELD_KEY]: updatedPathObject,
-        });
-    }
+    const updatedPathObject = preparePaths(
+        currentRecord[PATH_FIELD_KEY] as Path,
+        updatedSlug
+    );
+
+    await updateRecordOptimistic(recordID, client, {
+        [PATH_FIELD_KEY]: updatedPathObject,
+    });
 
     const childrenRecords = await client.items.list({
         filter: {
@@ -114,8 +112,7 @@ export default async function updateAllChildrenPaths(
                 apiToken,
                 modelID,
                 record.id,
-                updatedPathObject,
-                false
+                updatedPathObject
             );
         });
     }
