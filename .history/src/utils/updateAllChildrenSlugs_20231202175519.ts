@@ -70,7 +70,7 @@ export default async function updateAllChildrenPaths(
         },
     });
 
-    console.log("RECORDS", childrenRecords);
+    console.log(" RECORDS", childrenRecords);
 
     if (childrenRecords.length) {
         childrenRecords.forEach(async (record) => {

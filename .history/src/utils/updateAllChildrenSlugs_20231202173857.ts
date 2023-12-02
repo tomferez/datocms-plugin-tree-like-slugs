@@ -48,8 +48,6 @@ export default async function updateAllChildrenPaths(
 
     const currentRecord = await client.items.find(recordID);
 
-    console.log("CURRENT RECORD", currentRecord);
-
     const updatedPathObject = preparePaths(
         currentRecord[PATH_FIELD_KEY] as Path,
         updatedSlug
@@ -58,6 +56,8 @@ export default async function updateAllChildrenPaths(
     await client.items.update(recordID, {
         [PATH_FIELD_KEY]: updatedPathObject,
     });
+
+    console.log("CURRENT RECORD", currentRecord);
 
     const childrenRecords = await client.items.list({
         filter: {
@@ -70,7 +70,7 @@ export default async function updateAllChildrenPaths(
         },
     });
 
-    console.log("RECORDS", childrenRecords);
+    console.log(" RECORDS", childrenRecords);
 
     if (childrenRecords.length) {
         childrenRecords.forEach(async (record) => {
