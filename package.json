@@ -43,9 +43,13 @@
     ]
   },
   "devDependencies": {
+    "@types/react-dom": "^18.2.17",
     "cross-env": "^7.0.3"
   },
   "dependencies": {
-    "datocms-plugin-sdk": "^1.0.0"
+    "@datocms/cma-client-browser": "^3.0.8",
+    "datocms-plugin-sdk": "^1.0.0",
+    "datocms-react-ui": "^1.0.0",
+    "react-scripts": "^5.0.1"
   }
 }
