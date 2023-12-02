@@ -40,7 +40,6 @@ function preparePaths(pathObject: Path, updatedSlug: Slug) {
             .split("/")
             .filter((c) => c !== "")
             .slice(1);
-
         const slug = updatedSlug[path.lang];
 
         console.log("PATH ARRAY UPDATED SLUG", slug);
