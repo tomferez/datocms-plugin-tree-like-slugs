@@ -3,7 +3,7 @@ import { ApiError, Client, buildClient } from "@datocms/cma-client-browser";
 export type Slug = { [key: string]: string };
 type Path = { [key: string]: string };
 
-const PATH_FIELD_KEY = "path";
+const PATH_FIELD_KEY = "published_path";
 
 async function updateRecordOptimistic(
     itemId: string,
