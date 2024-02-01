@@ -51,6 +51,6 @@ connect({
             createOrUpdateItemPayload,
             fieldUsingThisPlugin,
             ctx
-        ).then(() => true);
+        );
     },
 });

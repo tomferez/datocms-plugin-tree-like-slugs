@@ -1,5 +1,7 @@
 import {
     IntentCtx,
+    Item,
+    OnBootPropertiesAndMethods,
     RenderFieldExtensionCtx,
     connect,
 } from "datocms-plugin-sdk";
@@ -7,7 +9,40 @@ import { render } from "./utils/render";
 import ConfigScreen from "./entrypoints/ConfigScreen";
 import "datocms-react-ui/styles.css";
 import SlugExtension from "./entrypoints/SlugExtension";
-import { updateFields } from "./utils/updateFields";
+import updateAllChildrenPaths, { Slug } from "./utils/updateAllChildrenSlugs";
+
+const updateFields = (
+    payload: Item[],
+    fields: Array<string>,
+    ctx: OnBootPropertiesAndMethods
+) =>
+    new Promise(() => {
+        for (const item of payload) {
+            const updatedFields = Object.keys(item.attributes as object);
+
+            let updatedSlugFieldKey;
+
+            fields.forEach((field) => {
+                if (updatedFields.includes(field)) {
+                    updatedSlugFieldKey = field;
+                    return;
+                }
+            });
+
+            if (!updatedSlugFieldKey) {
+                return true;
+            }
+
+            console.log("ITEM PAYLOAD DATA", item);
+
+            updateAllChildrenPaths(
+                ctx.currentUserAccessToken as string,
+                item.relationships!.item_type!.data.id,
+                (item as any).id,
+                item.attributes![updatedSlugFieldKey] as Slug
+            );
+        }
+    }).then(() => true);
 
 connect({
     renderConfigScreen(ctx) {
@@ -51,6 +86,6 @@ connect({
             createOrUpdateItemPayload,
             fieldUsingThisPlugin,
             ctx
-        ).then(() => true);
+        );
     },
 });

@@ -7,7 +7,7 @@ import { render } from "./utils/render";
 import ConfigScreen from "./entrypoints/ConfigScreen";
 import "datocms-react-ui/styles.css";
 import SlugExtension from "./entrypoints/SlugExtension";
-import { updateFields } from "./utils/updateFields";
+import updateAllChildrenPaths, { Slug } from "./utils/updateAllChildrenSlugs";
 
 connect({
     renderConfigScreen(ctx) {
@@ -47,10 +47,34 @@ connect({
             return true;
         }
 
-        return await updateFields(
-            createOrUpdateItemPayload,
-            fieldUsingThisPlugin,
-            ctx
-        ).then(() => true);
+        new Promise(() => {
+            for (const item of createOrUpdateItemPayload) {
+                const updatedFields = Object.keys(item.attributes as object);
+
+                let updatedSlugFieldKey;
+
+                (fieldUsingThisPlugin as Array<string>).forEach((field) => {
+                    if (updatedFields.includes(field)) {
+                        updatedSlugFieldKey = field;
+                        return;
+                    }
+                });
+
+                if (!updatedSlugFieldKey) {
+                    return true;
+                }
+
+                console.log("ITEM PAYLOAD DATA", item);
+
+                updateAllChildrenPaths(
+                    ctx.currentUserAccessToken as string,
+                    item.relationships!.item_type!.data.id,
+                    (item as any).id,
+                    item.attributes![updatedSlugFieldKey] as Slug
+                );
+            }
+        });
+
+        return true;
     },
 });
