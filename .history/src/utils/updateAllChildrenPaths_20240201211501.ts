@@ -39,19 +39,19 @@ function preparePaths(pathObject: Path, parentSlug: Slug) {
     pathArray.forEach((item) => {
         const path = item.path.split("/");
 
-        const parentSlugLocalized = [parentSlug[item.lang]];
+        const parentSlugLocalized = parentSlug[item.lang];
 
         const unchangedPathSection = path
             .filter((c) => c !== "")
             .slice(1, item.path.length - 1);
 
-        const itemSlug = [path.pop()];
+        const itemSlug = path.pop();
 
         if (itemSlug)
             item.path = [
-                ...parentSlugLocalized,
+                parentSlugLocalized,
                 ...unchangedPathSection,
-                ...itemSlug,
+                itemSlug!,
             ].join("/");
     });
 

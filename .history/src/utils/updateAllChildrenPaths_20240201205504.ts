@@ -31,28 +31,24 @@ async function updateRecordOptimistic(
     }
 }
 
-function preparePaths(pathObject: Path, parentSlug: Slug) {
+function preparePaths(pathObject: Path, updatedSlug: Slug) {
     const pathArray = Object.keys(pathObject).map((key) => {
         return { lang: key, path: pathObject[key] };
     });
 
-    pathArray.forEach((item) => {
-        const path = item.path.split("/");
-
-        const parentSlugLocalized = [parentSlug[item.lang]];
-
-        const unchangedPathSection = path
+    pathArray.forEach((path) => {
+        const destructuredOldPath = path.path
+            .split("/")
             .filter((c) => c !== "")
-            .slice(1, item.path.length - 1);
+            .slice(1);
 
-        const itemSlug = [path.pop()];
+        const slug = updatedSlug[path.lang];
 
-        if (itemSlug)
-            item.path = [
-                ...parentSlugLocalized,
-                ...unchangedPathSection,
-                ...itemSlug,
-            ].join("/");
+        path.path = `${slug ? `/${slug}` : ""}${
+            destructuredOldPath.length
+                ? `/${destructuredOldPath.join("/")}`
+                : ""
+        }`;
     });
 
     console.log("PATH ARRAY AFTER", pathArray);
@@ -104,7 +100,7 @@ export default async function updateAllChildrenPaths(
         childrenRecords.forEach(async (record) => {
             const updatedPathObject = preparePaths(
                 record[PATH_FIELD_KEY] as Path,
-                parentSlug
+                updatedSlug
             );
 
             console.log("UPDATED PATH OBJECT", updatedPathObject);

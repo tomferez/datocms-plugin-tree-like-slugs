@@ -12,7 +12,6 @@ async function updateRecordOptimistic(
 ): Promise<void> {
     // first we get the record we want to update
     const record = await client.items.find(itemId);
-
     try {
         // now we increment the counter value, passing the current version
         // to enable optimistic-locking
@@ -31,28 +30,26 @@ async function updateRecordOptimistic(
     }
 }
 
-function preparePaths(pathObject: Path, parentSlug: Slug) {
+function preparePaths(pathObject: Path, updatedSlug: Slug) {
     const pathArray = Object.keys(pathObject).map((key) => {
         return { lang: key, path: pathObject[key] };
     });
 
-    pathArray.forEach((item) => {
-        const path = item.path.split("/");
-
-        const parentSlugLocalized = [parentSlug[item.lang]];
-
-        const unchangedPathSection = path
+    pathArray.forEach((path) => {
+        const destructuredOldPath = path.path
+            .split("/")
             .filter((c) => c !== "")
-            .slice(1, item.path.length - 1);
+            .slice(1);
 
-        const itemSlug = [path.pop()];
+        const slug = updatedSlug[path.lang];
 
-        if (itemSlug)
-            item.path = [
-                ...parentSlugLocalized,
-                ...unchangedPathSection,
-                ...itemSlug,
-            ].join("/");
+        const updatedPath = `${slug ? `/${slug}` : ""}${
+            destructuredOldPath.length
+                ? `/${destructuredOldPath.join("/")}`
+                : ""
+        }`;
+
+        path.path = updatedPath;
     });
 
     console.log("PATH ARRAY AFTER", pathArray);
@@ -64,10 +61,10 @@ export default async function updateAllChildrenPaths(
     apiToken: string,
     modelID: string,
     recordID: string,
-    parentSlug: Slug,
+    updatedSlug: Slug,
     initial = true
 ) {
-    console.log("UPDATED SLUG INITIAL", parentSlug);
+    console.log("UPDATED SLUG INITIAL", updatedSlug);
 
     const client = buildClient({
         apiToken,
@@ -80,7 +77,7 @@ export default async function updateAllChildrenPaths(
 
         const updatedPathObject = preparePaths(
             currentRecord[PATH_FIELD_KEY] as Path,
-            parentSlug
+            updatedSlug
         );
         await updateRecordOptimistic(recordID, client, {
             [PATH_FIELD_KEY]: updatedPathObject,
@@ -104,7 +101,7 @@ export default async function updateAllChildrenPaths(
         childrenRecords.forEach(async (record) => {
             const updatedPathObject = preparePaths(
                 record[PATH_FIELD_KEY] as Path,
-                parentSlug
+                updatedSlug
             );
 
             console.log("UPDATED PATH OBJECT", updatedPathObject);

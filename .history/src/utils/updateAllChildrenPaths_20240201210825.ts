@@ -37,22 +37,18 @@ function preparePaths(pathObject: Path, parentSlug: Slug) {
     });
 
     pathArray.forEach((item) => {
-        const path = item.path.split("/");
-
-        const parentSlugLocalized = [parentSlug[item.lang]];
-
-        const unchangedPathSection = path
+        const unchangedPathSection = item.path
+            .split("/")
             .filter((c) => c !== "")
             .slice(1, item.path.length - 1);
 
-        const itemSlug = [path.pop()];
+        const parentSlugLocalized = parentSlug[item.lang];
 
-        if (itemSlug)
-            item.path = [
-                ...parentSlugLocalized,
-                ...unchangedPathSection,
-                ...itemSlug,
-            ].join("/");
+        item.path = `${parentSlugLocalized ? `/${parentSlugLocalized}` : ""}${
+            unchangedPathSection.length
+                ? `/${unchangedPathSection.join("/")}`
+                : ""
+        }`;
     });
 
     console.log("PATH ARRAY AFTER", pathArray);

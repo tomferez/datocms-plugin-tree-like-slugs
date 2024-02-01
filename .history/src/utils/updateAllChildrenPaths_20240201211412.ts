@@ -45,13 +45,19 @@ function preparePaths(pathObject: Path, parentSlug: Slug) {
             .filter((c) => c !== "")
             .slice(1, item.path.length - 1);
 
-        const itemSlug = [path.pop()];
+        const itemSlug = path.pop();
+
+        // item.path = `${parentSlugLocalized ? `/${parentSlugLocalized}` : ""}${
+        //     unchangedPathSection.length
+        //         ? `/${unchangedPathSection.join("/")}`
+        //         : ""
+        // }`;
 
         if (itemSlug)
             item.path = [
                 ...parentSlugLocalized,
                 ...unchangedPathSection,
-                ...itemSlug,
+                itemSlug!,
             ].join("/");
     });
 
