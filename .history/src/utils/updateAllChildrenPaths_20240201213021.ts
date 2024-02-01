@@ -4,6 +4,7 @@ import {
     SimpleSchemaTypes,
     buildClient,
 } from "@datocms/cma-client-browser";
+import { Item } from "datocms-plugin-sdk";
 
 export type Slug = { [key: string]: string };
 type Path = { [key: string]: string };

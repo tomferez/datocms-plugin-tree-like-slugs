@@ -4,6 +4,7 @@ import {
     SimpleSchemaTypes,
     buildClient,
 } from "@datocms/cma-client-browser";
+import { Item } from "datocms-plugin-sdk";
 
 export type Slug = { [key: string]: string };
 type Path = { [key: string]: string };
@@ -54,7 +55,7 @@ function preparePaths(
             .filter((c) => c !== "")
             .slice(1, item.path.length - 1);
 
-        const itemSlug = [(record.slug as Slug)[item.lang]];
+        const itemSlug = [record.slug];
 
         if (itemSlug)
             item.path = [

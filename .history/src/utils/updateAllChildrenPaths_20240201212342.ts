@@ -1,9 +1,4 @@
-import {
-    ApiError,
-    Client,
-    SimpleSchemaTypes,
-    buildClient,
-} from "@datocms/cma-client-browser";
+import { ApiError, Client, buildClient } from "@datocms/cma-client-browser";
 
 export type Slug = { [key: string]: string };
 type Path = { [key: string]: string };
@@ -36,11 +31,7 @@ async function updateRecordOptimistic(
     }
 }
 
-function preparePaths(
-    pathObject: Path,
-    parentSlug: Slug,
-    record: SimpleSchemaTypes.Item
-) {
+function preparePaths(pathObject: Path, parentSlug: Slug) {
     const pathArray = Object.keys(pathObject).map((key) => {
         return { lang: key, path: pathObject[key] };
     });
@@ -54,7 +45,7 @@ function preparePaths(
             .filter((c) => c !== "")
             .slice(1, item.path.length - 1);
 
-        const itemSlug = [(record.slug as Slug)[item.lang]];
+        const itemSlug = [path.pop()];
 
         if (itemSlug)
             item.path = [
@@ -89,8 +80,7 @@ export default async function updateAllChildrenPaths(
 
         const updatedPathObject = preparePaths(
             currentRecord[PATH_FIELD_KEY] as Path,
-            parentSlug,
-            currentRecord
+            parentSlug
         );
         await updateRecordOptimistic(recordID, client, {
             [PATH_FIELD_KEY]: updatedPathObject,
@@ -114,8 +104,7 @@ export default async function updateAllChildrenPaths(
         childrenRecords.forEach(async (record) => {
             const updatedPathObject = preparePaths(
                 record[PATH_FIELD_KEY] as Path,
-                parentSlug,
-                record
+                parentSlug
             );
 
             console.log("UPDATED PATH OBJECT", updatedPathObject);
